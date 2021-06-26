@@ -1,0 +1,324 @@
+
+/*************************************Custom Properties********************************/
+:root {
+    --dashboard-bg-grey: #f8f6fb;
+    --todo-card-shadow-grey: #dfdde0;
+}
+
+* {
+    margin: 0;
+}
+
+.App {
+    height: 100vh;
+}
+
+/*************************************Sign Up And Sign In********************************/
+
+.sign-up, .sign-in {
+    display: block;
+    background-color: #e6e4e4;
+    min-height: 100%;
+    font-weight: bold;
+}
+
+/****************************************Auth Box******************************/
+
+.auth-box{
+    position: relative;
+    top: 75px;
+    max-width: 25%;
+    margin: 0 auto;
+    background-color: white;
+    padding: 50px 50px 100px 50px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.auth-box input{
+    display: block;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    padding: 5px;
+    width: 90%;
+    color: grey;
+    font-size: 1em;
+}
+
+.auth-box p{
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.auth-box label {
+    display: inline-block;
+    margin-left: 20px;
+    margin-bottom: 4px;
+    font-size: 0.9em;
+}
+
+.auth-box button {
+    width: 100%;
+    padding: 10px;
+    color: white;
+    background-color: crimson;
+    border: 1px solid white;
+    border-radius: 8px;
+    letter-spacing: 2px;
+}
+
+.auth-submit-btn-div {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.auth-box input:focus{
+    outline: 1px solid cornflowerblue;
+}
+
+.auth-box button:active {
+    transform: scale(0.95);
+}
+
+.auth-box h4{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.auth-box h5{
+    margin-top: 10px;
+    color: red;
+    text-align: center;
+    font-style: italic;
+}
+
+.invalid-input {
+    border: 2px solid red;
+}
+
+/****************************************Home******************************/
+.home {
+    height: 100%;
+    background-color: var(--dashboard-bg-grey);
+}
+
+/****************************************Action Bar******************************/
+.action-bar {
+    padding: 20px;
+    margin: 20px;
+    border-radius: 20px;
+    box-shadow: 1px 1px 10px var(--todo-card-shadow-grey);
+    font-family: Helvetica;
+    background-color: white;
+    color: darkorchid;
+    font-style: italic;
+}
+
+/****************************************Dashboard******************************/
+.dashboard {
+    display: flex;
+    background-color: var(--dashboard-bg-grey);
+    padding: 10px;
+    height: 100%;
+    box-sizing: border-box;
+    justify-content: space-between;
+}
+
+/****************************************Side Nav Bar******************************/
+
+.side-nav-bar
+{
+    background-color: white;
+    align-self: stretch;
+    border-radius: 10px;
+    flex: 2 1 auto;
+    min-width: 25%;
+    max-width: 25%;
+}
+
+.user-details{
+    padding: 50px 75px 75px 75px;
+    text-align: center;
+}
+
+.user-details h3{
+    margin-top: 20px;
+    text-align: center;
+    font-family: Helvetica;
+    color: darkorchid;  
+}
+
+.side-nav-bar-controls {
+    padding: 0px 2px 10px 2px;
+}
+
+.side-nav-bar-controls button
+{
+    display: block;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #d1cece;
+    padding: 8px;
+    font-family: cursive;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.side-nav-bar-controls button:active{
+    transform: scaleY(1.1);
+}
+
+/****************************************Todo List******************************/
+.todo-list{
+    display: inline-block;
+    background-color: var(--dashboard-bg-grey);
+    font-family: cursive;
+    flex-basis: 20%;
+    max-width: 20%;
+}
+
+.todo-list-title {
+    padding: 20px;
+    color: darkorchid;
+    display: flex;
+}
+
+.todo-list-title h4{
+    display: inline-block;
+}
+
+.new-card-icon {
+    display: inline-block;
+    text-align: end;
+    flex: 1;
+} 
+
+.new-card-icon button {
+    background-color: var(--dashboard-bg-grey);
+    border: 0px;
+}
+
+.new-card-icon button:hover {
+    transform: scale(1.1);
+}
+
+/****************************************Popup******************************/
+
+.overlay {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.2);
+    
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.popup-box{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 25%;
+    min-height: 50%;
+    align-self: center;
+}
+
+.popup-taskbar
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid var(--todo-card-shadow-grey);
+}
+
+.popup-taskbar h3{
+    flex: 1;
+}
+
+.popup-taskbar button {
+    border: 0;
+    background-color: transparent;
+}
+
+.popup-taskbar button:active {
+    transform: scale(0.8);
+}
+
+.popup-body {
+    display: flex;
+    flex:1;
+}
+
+/****************************************New List Dialog******************************/
+.new-list-dialog-box {
+    justify-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px;
+    flex:1
+}
+
+.new-list-dialog-box input {
+    padding: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1em;
+    color: grey;
+}
+
+.new-list-dialog-box p {
+    color: red;
+    align-self: center;
+    font-style: italic;
+}
+
+
+/****************************************Todo Card******************************/
+.todo-card {
+    margin: 20px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 1px 1px 10px var(--todo-card-shadow-grey);
+    flex-grow: 1;
+}
+
+.todo-card .todo-card-title {
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+
+.todo-card:hover {
+    transform: scale(1.1);
+}
+
+/****************************************Loading dialog******************************/
+
+.loading-dialog{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex:1;
+}
+
+.loader {
+    border: 8px solid grey;
+    border-top: 8px solid blue;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}

@@ -100,6 +100,7 @@
 
 /****************************************Home******************************/
 .home {
+    width: 100%;
     height: 100%;
     background-color: var(--dashboard-bg-grey);
 }
@@ -123,7 +124,6 @@
     padding: 10px;
     height: 100%;
     box-sizing: border-box;
-    justify-content: space-between;
 }
 
 /****************************************Side Nav Bar******************************/
@@ -176,7 +176,8 @@
     background-color: var(--dashboard-bg-grey);
     font-family: cursive;
     flex-basis: 20%;
-    max-width: 20%;
+    min-width: 20%;
+    flex: 1;
 }
 
 .todo-list-title {
@@ -187,20 +188,21 @@
 
 .todo-list-title h4{
     display: inline-block;
+    text-align: center;
+    flex: 1;
 }
 
 .new-card-icon {
     display: inline-block;
     text-align: end;
-    flex: 1;
 } 
 
-.new-card-icon button {
+.todo-list-title button {
     background-color: var(--dashboard-bg-grey);
     border: 0px;
 }
 
-.new-card-icon button:hover {
+.todo-list-title button:hover {
     transform: scale(1.1);
 }
 

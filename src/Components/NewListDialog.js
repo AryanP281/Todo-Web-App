@@ -1,7 +1,8 @@
 
 /*****************************Imports*********************/
 import Popup from "./Popup";
-import {addNewList, displayPopup} from "./Home"
+import {displayPopup} from "./Home"
+import { addNewList, listExists } from "./Dashboard";
 import { useState } from "react";
 
 /*****************************Variables*********************/
@@ -46,9 +47,14 @@ function createList(setError)
     };
 
     //Checking if details are valid
-    if(!isValid(newList))
+    const errorCode = isValid(newList);
+    if(errorCode !== 0)
     {
-        setError("List title cannot be empty")
+        switch(errorCode)
+        {
+            case 1 : setError("List Title cannot be empty"); break;
+            case 2 : setError("List with given name already exists"); break;
+        }
         return;
     }
 
@@ -59,15 +65,19 @@ function createList(setError)
             "Content-Type": "application/json"
         },
         credentials: "include",
-        body: JSON.stringify()
+        body: JSON.stringify(newList)
     })
     .then((resp) => {
         if(resp.status !== 200)
             throw Error();
         //Displaying the new list
         addNewList(newList);
+
+        //Closing the poput
+        displayPopup(null);
     })
     .catch((err) => {
+        console.log(err);
         alert("Failed to create new list. Try again")
     })
 }
@@ -77,7 +87,14 @@ function isValid(details)
     /*Checks if the entered list details are valid */
 
     //Checking list name
-    return details.name.length > 0;
+    if(details.name.length <= 0)
+        return 1;
+
+    //Checking if list name is unique
+    if(listExists(details.name))
+        return 2;
+
+    return 0;
 }
 
 /*****************************Exports*********************/

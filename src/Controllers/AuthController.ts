@@ -33,7 +33,7 @@ async function createUserCollection(userId : string) : Promise<string>
     const userCollection : Collection = await mongodb.db().createCollection(userId);
 
     //Adding the user lists document
-    const listDoc = await userCollection.insertOne({lists: ["Do", "Doing", "Done"]});
+    const listDoc = await userCollection.insertOne({lists: [{name:"Do"}, {name:"Doing"}, {name:"Done"}]});
 
     return listDoc.ops[0]._id.toString();
 }

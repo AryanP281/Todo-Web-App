@@ -33,7 +33,7 @@ async function createUserCollection(userId : string) : Promise<string>
     const userCollection : Collection = await mongodb.db().createCollection(userId);
 
     //Adding the user lists document
-    const listDoc = await userCollection.insertOne({lists: [{name:"Do"}, {name:"Doing"}, {name:"Done"}]});
+    const listDoc = await userCollection.insertOne({lastIndex: 2, Do: {code: 0}, Doing: {code: 1}, Done: {code: 2}});
 
     return listDoc.ops[0]._id.toString();
 }
@@ -66,7 +66,7 @@ async function createUserAccount(req : Request, resp : Response) : Promise<void>
 
         //Creating the user collection
         const userId : string = res.ops[0]._id.toString(); //Getting the id of the user document
-        const listsDocId : string = await createUserCollection(userId);
+        await createUserCollection(userId);
 
         //Setting the cookies
         const userToken = await jwt.sign(userId, JWT_SECRET!); //Generating the JWT

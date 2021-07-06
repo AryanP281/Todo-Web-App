@@ -66,12 +66,12 @@ function displayTodos(lists, todos, setTodos)
 
     //Mapping lists
     lists.forEach((list, index) => {
-        todoLists.push({list, todos: []});
-        listsMap.set(list.name, index);
+        todoLists.push({list,todos: []});
     });
 
     //Inserting todos
     todos.forEach((todo) => {
+        console.log(todo)
         todoLists[todo.listCode].todos.push(todo);
     });
 
@@ -100,8 +100,8 @@ function getLists(todos)
     /*Returns the array of TodoList items to be displayed */
 
     const lists = []
-    todos.forEach((todo) => {
-        lists.push(<TodoList title={todo.list.name} todos={todo.todos}/>);
+    todos.forEach((todo, index) => {
+        lists.push(<TodoList title={todo.list.name} todos={todo.todos} listCode={todo.list.code}/>);
     });
 
     return lists;
@@ -114,7 +114,7 @@ function deleteList(listName, todos, setTodos)
     removeListElement(listName, todos, setTodos);
 
     //Sending request to delete list and its todos from database
-    /*fetch(deleteListUrl, {
+    fetch(deleteListUrl, {
         method: "POST",
         headers: {
             "Content-Type" : "application/json"
@@ -130,7 +130,7 @@ function deleteList(listName, todos, setTodos)
     .catch((err) => {
         console.log(err);
         alert("Unable to delete list. Try again");
-    })*/
+    })
 
 }
 

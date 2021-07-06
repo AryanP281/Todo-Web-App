@@ -3,8 +3,10 @@ import Home from "./Components/Home";
 import SignUp from './Components/SignUp';
 import SignIn from "./Components/SignIn";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom"
+import DndTest from './Components/DndTest';
 
 function App() {
+  
   return (
     <Router>
       <div className="App">
@@ -26,6 +28,7 @@ function App() {
       </div>
     </Router>
   );
+
 }
 
 export default App;

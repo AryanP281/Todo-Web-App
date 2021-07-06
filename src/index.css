@@ -281,6 +281,10 @@
     font-style: italic;
 }
 
+.new-list-dialog-box button {
+    padding: 8px;
+}
+
 
 /****************************************Todo Card******************************/
 .todo-card {
@@ -298,6 +302,20 @@
 }
 
 .todo-card:hover {
+    transform: scale(1.1);
+}
+
+.todo-card-actions {
+    padding: 8px;
+    display: flex;
+}
+
+.todo-card-actions button {
+    background-color: transparent;
+    border: 0;
+}
+
+.todo-card-actions button:hover {
     transform: scale(1.1);
 }
 
@@ -323,4 +341,11 @@
 @keyframes spin {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
+}
+
+/****************************************New Todo dialog******************************/
+#new-todo-dscr {
+    margin-top: 8px;
+    width: 100%;
+    box-sizing: border-box;
 }

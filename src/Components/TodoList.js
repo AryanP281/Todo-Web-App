@@ -7,6 +7,7 @@ import { removeList } from "./Dashboard";
 import { useState, Component } from "react";
 import { displayPopup } from "./Home";
 import NewTodoDialog from "./NewTodoDialog";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 /*****************************Variables************************* */
 const addTodoApiUrl = "http://localhost:5000/lists/newTodo";
@@ -41,21 +42,33 @@ class TodoList extends Component
                         </button>
                     </div>
                 </div>
-                <div className="todo-body">
-                    {this.getTodoCards()}
-                </div>
+                <DragDropContext>
+                    <Droppable droppableId="todoCards">
+                        {(provider) => (
+                            <div className="todoCards" {...provider.droppableProps} ref={provider.innerRef}>
+                                {this.getTodoCards()}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
             </div>
         );
     }
 
     getTodoCards()
     {
-        const cards = [];
-        this.state.todos.forEach((todo) => {
-            cards.push(<TodoCard title={todo.name} todoDescription={todo.dscr} id={todo.id} todoList={this}/>)
+        return this.state.todos.map((todo,index) => {
+            return (
+                <Draggable key={todo.id} draggableId={todo.id} index={index} >
+                    {(provided) => (
+                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <TodoCard title={todo.name} todoDescription={todo.dscr} id={todo.id} todoList={this}/>
+                        </div>
+                    )}
+                </Draggable>
+            )
         });
-
-        return cards;
+        
     }
 
     addNewTodo(newTodo) 

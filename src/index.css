@@ -124,6 +124,8 @@
     padding: 10px;
     height: 100%;
     box-sizing: border-box;
+    justify-items: stretch;
+    overflow: auto;
 }
 
 /****************************************Side Nav Bar******************************/
@@ -171,13 +173,17 @@
 }
 
 /****************************************Todo List******************************/
-.todo-list{
-    display: inline-block;
+.todoListDroppable {
     background-color: var(--dashboard-bg-grey);
-    font-family: cursive;
     flex-basis: 20%;
     min-width: 20%;
-    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.todo-list{
+    display: block;
+    font-family: cursive;
 }
 
 .todo-list-title {

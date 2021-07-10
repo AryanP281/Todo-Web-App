@@ -26,7 +26,7 @@ class TodoList extends Component
 
     render() 
     {
-        
+
         return (
             <div className="todo-list">
                 <div className="todo-list-title">
@@ -42,15 +42,7 @@ class TodoList extends Component
                         </button>
                     </div>
                 </div>
-                <DragDropContext>
-                    <Droppable droppableId="todoCards">
-                        {(provider) => (
-                            <div className="todoCards" {...provider.droppableProps} ref={provider.innerRef}>
-                                {this.getTodoCards()}
-                            </div>
-                        )}
-                    </Droppable>
-                </DragDropContext>
+                {this.getTodoCards()}
             </div>
         );
     }
@@ -58,6 +50,7 @@ class TodoList extends Component
     getTodoCards()
     {
         return this.state.todos.map((todo,index) => {
+            
             return (
                 <Draggable key={todo.id} draggableId={todo.id} index={index} >
                     {(provided) => (
@@ -162,7 +155,6 @@ class TodoList extends Component
         this.setState({todos: newTodos});
     }
 }
-
 
 /*****************************Exports************************* */
 export default TodoList;

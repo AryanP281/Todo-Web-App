@@ -70,6 +70,14 @@ function createList(setError)
     .then((resp) => {
         if(resp.status !== 200)
             throw Error();
+        
+        return resp.json();
+    })
+    .then((data) => {
+
+        //Setting the code for the new list
+        newList.code = data.code;
+
         //Displaying the new list
         addNewList(newList);
 
@@ -79,7 +87,7 @@ function createList(setError)
     .catch((err) => {
         console.log(err);
         alert("Failed to create new list. Try again")
-    })
+    });
 }
 
 function isValid(details)

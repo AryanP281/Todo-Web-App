@@ -355,3 +355,10 @@
     width: 100%;
     box-sizing: border-box;
 }
+
+/****************************************Edit Todo dialog******************************/
+#todo-dscr {
+    margin-top: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}

@@ -19,11 +19,9 @@ function Home()
     popupSetter = setPopup;
 
     //Checking if user has logged in
-    /*
     const cookiesMap = getCookies();
     if(!cookiesMap.has("auth"))
         history.replace("/signin"); //Redirecting to sign in page
-    */ 
 
     return (
         <div className="home">

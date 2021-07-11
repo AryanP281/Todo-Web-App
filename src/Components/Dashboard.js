@@ -20,8 +20,6 @@ const todoItemChangesUrl = "http://localhost:5000/lists/movetodos"; //The api en
 /*****************************Component*********************/
 function Dashboard()
 {
-    console.log("State changed")
-    
     const [todos, setTodos] = useState(null);
 
     //Initializing functions
@@ -38,6 +36,12 @@ function Dashboard()
     useEffect(() => {
         window.addEventListener("beforeunload", (event) => {
             
+            //Flushing card changes
+            flushItemChangesBuffer();
+            
+            (event || window.event).returnValue = "\o/";
+
+            return "\o/";
         });
     },[]);
 
@@ -191,7 +195,7 @@ function writeCardSwaps()
 {
     /*Writes the performed card swaps to database periodically */
 
-    const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 5000));
+    const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 30000));
     timeoutPromise.then(() => {
         flushItemChangesBuffer();
     });

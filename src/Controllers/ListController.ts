@@ -289,6 +289,32 @@ async function moveTodos(req : Request, resp : Response) : Promise<void>
     }
 }
 
+async function editTodoItem(req : Request, resp : Response) : Promise<void>
+{
+    /*Edits the details of the given todo item */
+
+    try
+    {
+        //Getting the user collection
+        const userCollection : Collection = await mongodb.db().collection(req.body.userId);
+
+        //Updating the todo item document
+        const setObj : any = {};
+        if(req.body.todo.title)
+            setObj.title = req.body.todo.title;
+        if(req.body.todo.dscr)
+            setObj.dscr = req.body.todo.dscr;
+        await userCollection.updateOne({_id : new ObjectId(req.body.todo.todoId)}, {$set : setObj});
+
+        resp.sendStatus(200);
+    }
+    catch(err)
+    {
+        console.log(err);
+        resp.sendStatus(500);
+    }
+}
+
 /*****************************Exports*********************/
-export {getUserTodos, createNewList, deleteList, addNewTodo, deleteTodo, moveTodos};
+export {getUserTodos, createNewList, deleteList, addNewTodo, deleteTodo, moveTodos, editTodoItem};
 

@@ -175,6 +175,12 @@ async function deleteTodo(req : Request, resp : Response) : Promise<void>
 
         //Getting the todo item document
         const todoDocument = await userCollection.findOne({_id : new ObjectId(req.body.todoId)});
+        //Checking if document exists
+        if(todoDocument === null)
+        {
+            resp.sendStatus(200);
+            return;
+        }
 
         //Updating the orders of the remaining documents
         await userCollection.updateMany({$and : [{listCode : todoDocument.listCode}, {order : {$gt : todoDocument.order}}]}, {$inc : {order : -1}});
@@ -207,7 +213,7 @@ async function deleteTodo(req : Request, resp : Response) : Promise<void>
 async function moveTodos(req : Request, resp : Response) : Promise<void>
 {
     /*Handles inter and intra list movement of todo cards */
-
+    
     try
     {   
         const todoItemsMap : Map<string, {src: number,dest:number,destOrder:number,srcOrder:number}> = new Map();
@@ -228,10 +234,15 @@ async function moveTodos(req : Request, resp : Response) : Promise<void>
         //Getting the user collection
         const userCollection : Collection = await mongodb.db().collection(req.body.userId);
 
+
         //Updating the todo items' documents
         const listCardCountChanges : Map<number,number> = new Map<number,number>();
         for(const [key,value] of todoItemsMap) 
         {   
+            //Checking if the todo item exists or has been deleted
+            if((await userCollection.findOne({_id : new ObjectId(key)})) === null)
+                continue;
+            
             //Shifting todo cards
             if(value.src === value.dest)
             {
@@ -270,15 +281,18 @@ async function moveTodos(req : Request, resp : Response) : Promise<void>
         };
 
         //Updating the list card counts
-        const listsDoc = await userCollection.findOne({lastIndex : {$exists : true}}, {projection: {lastIndex:0}});
-        const docId : ObjectId = listsDoc._id; //Getting the id of the document
-        delete listsDoc._id;
-        const setObj : any = {};
-        Object.entries(listsDoc).forEach((list : [string, any]) => {
-            if(listCardCountChanges.has(list[1].code))
-                setObj[`${list[0]}.cards`] = list[1].cards + listCardCountChanges.get(list[1].code);
-        });
-        await userCollection.updateOne({_id : docId}, {$set : setObj});
+        if(listCardCountChanges.size > 0)
+        {
+            const listsDoc = await userCollection.findOne({lastIndex : {$exists : true}}, {projection: {lastIndex:0}});
+            const docId : ObjectId = listsDoc._id; //Getting the id of the document
+            delete listsDoc._id;
+            const setObj : any = {};
+            Object.entries(listsDoc).forEach((list : [string, any]) => {
+                if(listCardCountChanges.has(list[1].code))
+                    setObj[`${list[0]}.cards`] = list[1].cards + listCardCountChanges.get(list[1].code);
+            });
+            await userCollection.updateOne({_id : docId}, {$set : setObj});
+        }
 
         resp.sendStatus(200);
     }
@@ -300,11 +314,12 @@ async function editTodoItem(req : Request, resp : Response) : Promise<void>
 
         //Updating the todo item document
         const setObj : any = {};
-        if(req.body.todo.title)
-            setObj.title = req.body.todo.title;
+        if(req.body.todo.name)
+            setObj.name = req.body.todo.name;
         if(req.body.todo.dscr)
             setObj.dscr = req.body.todo.dscr;
-        await userCollection.updateOne({_id : new ObjectId(req.body.todo.todoId)}, {$set : setObj});
+        
+        await userCollection.updateOne({_id : new ObjectId(req.body.todo.id)}, {$set : setObj});
 
         resp.sendStatus(200);
     }

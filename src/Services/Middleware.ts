@@ -2,7 +2,7 @@
 /*****************************Imports*********************/
 import {Request, Response} from "express";
 import jwt from "jsonwebtoken";
-import {JWT_SECRET} from "../Config/App";
+import {CORS_ORIGIN, JWT_SECRET} from "../Config/App";
 
 /*****************************Middleware*********************/
 async function verifyUserToken(req : Request, resp : Response, next : any) : Promise<void>
@@ -34,6 +34,7 @@ async function verifyUserToken(req : Request, resp : Response, next : any) : Pro
         }
         catch(err)
         {
+            console.log(err);
             resp.status(200).json({success:false,code:4});
         }
     }
@@ -43,8 +44,9 @@ function addCorsHeaderFields(req : Request, resp : Response, next : any) : void
 {
     /*Middleware to add the required CORS headers to the responses*/
 
+
     //Adding the required header fields
-    resp.append("Access-Control-Allow-Origin", "http://localhost:3000");
+    resp.append("Access-Control-Allow-Origin", CORS_ORIGIN);
     resp.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
     resp.append("Access-Control-Allow-Headers", "Content-Type");
     resp.append("Access-Control-Allow-Credentials", "true")

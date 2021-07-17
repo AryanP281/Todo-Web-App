@@ -1,12 +1,13 @@
 
 /*****************************Imports*********************/
 import Popup from "./Popup";
+import {apiBaseUrl} from "../Config/Global";
 import {displayPopup} from "./Home"
 import { addNewList, listExists } from "./Dashboard";
 import { useState } from "react";
 
 /*****************************Variables*********************/
-const newListApiUrl = "http://localhost:5000/lists/new"; //The api url to add a new list
+const newListApiUrl = `${apiBaseUrl}lists/new`; //The api url to add a new list
 
 /*****************************Component*********************/
 function NewListDialog()

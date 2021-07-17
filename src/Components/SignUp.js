@@ -3,11 +3,12 @@
 import {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import { getCookies, emailRegex } from "../Services/Services";
+import {apiBaseUrl} from "../Config/Global";
 
 /*********************************Variables***********************/
 const errorMessages = ["First Name cannot be empty. ", "Last name cannot be empty.", "Invalid email format.", 
     "Password has to be atleast 6 characters long.", "Email already exists. ", "Failed to create account. "]; //The different error messages to be shown
-const apiUrl = "http://localhost:5000/auth/signup"; //The api url to be used for creating user accounts
+const apiUrl = `${apiBaseUrl}auth/signup`; //The api url to be used for creating user accounts
 
 /*********************************Component***********************/
 function SignUp()

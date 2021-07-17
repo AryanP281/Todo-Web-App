@@ -98,6 +98,18 @@
     border: 2px solid red;
 }
 
+@media screen and (max-width: 700px)
+{
+    .auth-box {
+        position: static;
+        display: block;
+        height: 100vh;
+        margin: 0 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
 /****************************************Home******************************/
 .home {
     width: 100%;
@@ -116,6 +128,7 @@
     color: darkorchid;
     font-style: italic;
 }
+
 
 /****************************************Dashboard******************************/
 .dashboard {
@@ -172,6 +185,13 @@
     transform: scaleY(1.1);
 }
 
+@media screen and (max-width: 900px) 
+{
+    .side-nav-bar{
+        display: none;
+    }    
+}
+
 /****************************************Todo List******************************/
 .todoListDroppable {
     background-color: var(--dashboard-bg-grey);
@@ -190,6 +210,7 @@
     padding: 20px;
     color: darkorchid;
     display: flex;
+    word-wrap: break-word;
 }
 
 .todo-list-title h4{
@@ -210,6 +231,12 @@
 
 .todo-list-title button:hover {
     transform: scale(1.1);
+}
+
+@media screen and (max-width: 775px) {
+    .todoListDroppable {
+        min-width: 50%;
+    }
 }
 
 /****************************************Popup******************************/
@@ -263,6 +290,14 @@
     flex:1;
 }
 
+@media screen and (max-width: 775px) {
+    .popup-box{
+        width: 50%;
+        min-height: 0;
+        height: 25%;
+    }
+}
+
 /****************************************New List Dialog******************************/
 .new-list-dialog-box {
     justify-self: stretch;
@@ -300,6 +335,7 @@
     border-radius: 20px;
     box-shadow: 1px 1px 10px var(--todo-card-shadow-grey);
     flex-grow: 1;
+    word-wrap: break-word;
 }
 
 .todo-card .todo-card-title {
@@ -347,6 +383,15 @@
 @keyframes spin {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
+}
+
+@media screen and (max-width: 775px) {
+    .loader{
+        width: 25px;
+        height: 25px;
+        border: 4px solid grey;
+        border-top: 4px solid blue;
+    }
 }
 
 /****************************************New Todo dialog******************************/

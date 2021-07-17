@@ -2,17 +2,19 @@
 /*****************************Imports*********************/
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faUserCircle} from "@fortawesome/free-solid-svg-icons";
-import { addTodoList } from "./Dashboard";
 import { displayPopup } from "./Home";
 import NewListDialog from "./NewListDialog";
+import {apiBaseUrl} from "../Config/Global";
+import { useHistory } from "react-router";
 
 /*****************************Variables*********************/
-const logoutApiUrl = "";
+const logoutApiUrl = `${apiBaseUrl}auth/logout`; //The api endpoint url to logout the user
 
 /*****************************Component*********************/
 function SideNavBar()
 {
-    
+    const history = useHistory();
+
     return (
         <div className="side-nav-bar">
             <div className="user-details">
@@ -21,22 +23,29 @@ function SideNavBar()
             </div>
             <div className="side-nav-bar-controls">
                 <button onClick={newList}>New List</button>
-                <button onClick={logout}>Log Out</button>
+                <button onClick={() => logout(history)}>Log Out</button>
             </div>
         </div>
     );
 }
 
-function logout()
+function logout(history)
 {
     /*Logs the user out*/
 
-    fetch("http://localhost:5000/auth/logout", {
+    fetch(logoutApiUrl, {
         method: "GET",
         credentials: "include"
-    }).then((resp) => resp.json())
-        .then((data) => console.log(data))
-        .catch((err) => console.log(err));
+    })
+    .then((resp) => resp.json())
+    .then((data) => {
+        if(data.code != 0)
+            throw Error(data.code);
+        
+        //Redirecting to login page
+        history.replace("/signin");
+    })
+    .catch((err) => console.log(err));
 }
 
 function newList()

@@ -7,11 +7,13 @@ import { removeList } from "./Dashboard";
 import { useState, Component } from "react";
 import { displayPopup } from "./Home";
 import NewTodoDialog from "./NewTodoDialog";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Draggable } from "react-beautiful-dnd";
+import {apiBaseUrl} from "../Config/Global";
+import {insertNewTodo, removeTodo} from "./Dashboard";
 
 /*****************************Variables************************* */
-const addTodoApiUrl = "http://localhost:5000/lists/newTodo";
-const removeTodoApiUrl = "http://localhost:5000/lists/removetodo";
+const addTodoApiUrl = `${apiBaseUrl}lists/newTodo`;
+const removeTodoApiUrl = `${apiBaseUrl}lists/removetodo`;
 
 /*****************************Component************************* */
 class TodoList extends Component 
@@ -49,18 +51,25 @@ class TodoList extends Component
 
     getTodoCards()
     {
-        return this.state.todos.map((todo,index) => {
-            
-            return (
-                <Draggable key={todo.id} draggableId={todo.id} index={index} >
-                    {(provided) => (
-                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <TodoCard title={todo.name} todoDescription={todo.dscr} id={todo.id} todoList={this}/>
-                        </div>
-                    )}
-                </Draggable>
-            )
-        });
+        try
+        {
+            return this.state.todos.map((todo,index) => {
+                return (
+                    <Draggable key={todo.id} draggableId={todo.id} index={index} >
+                        {(provided) => (
+                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                <TodoCard title={todo.name} todoDescription={todo.dscr} id={todo.id} todoList={this}/>
+                            </div>
+                        )}
+                    </Draggable>
+                )
+            });
+        }
+        catch(err)
+        {
+            console.log(err)
+            console.log(this.state.todos)
+        }
         
     }
 
@@ -89,7 +98,8 @@ class TodoList extends Component
         .then((data) => {
             newTodo["id"] = data.id;
 
-            this.displayNewTodo(newTodo);
+            this.updateList({addNew:true, newTodo});
+            insertNewTodo(newTodo);
 
             //Closing the new todo dialog
             displayPopup(null);
@@ -98,19 +108,6 @@ class TodoList extends Component
             console.log(err);
             alert("Failed to create todo card. Try again !");
         })
-    }
-
-    displayNewTodo(newTodo)
-    {
-        /*Displays the given new todo card */
-
-        const newTodos = [];
-        this.state.todos.forEach((todo) => {
-            newTodos.push(todo);
-        });
-        newTodos.push(newTodo);
-
-        this.setState({todos: newTodos})
     }
 
     deleteTodo(todoId)
@@ -129,9 +126,8 @@ class TodoList extends Component
         .then((resp) => {
             if(resp.status !== 200)
                 throw Error();
-            console.log(resp.status)
             
-            this.removeTodo(todoId);
+            removeTodo({todoId, listCode: this.props.listCode});
         })
         .catch((err) => {
             console.log(err);
@@ -140,20 +136,35 @@ class TodoList extends Component
 
     }
 
-    showNewTodoDialog = () => displayPopup(<NewTodoDialog createNewTodo={this.addNewTodo.bind(this)}/>);
-
-    removeTodo(todoId)
+    updateList(updateDetails)
     {
-        /*Removes the given todo card from the list of todos */
+        /*Adds or deletes cards from the list */
 
-        const newTodos = []
-        this.state.todos.forEach((todo) => {
-            if(todo.id !== todoId)
-                newTodos.push(todo);
-        });
+        const newState = {todos:[]}; //The new state of the component
 
-        this.setState({todos: newTodos});
+        if(updateDetails.addNew)
+        {
+            //Adds new todo to list
+
+            this.state.todos.forEach((todo) => {
+                newState.todos.push(todo);
+            });
+            newState.todos.push(updateDetails.newTodo);
+        }
+        else
+        {
+            //Removes todo from list
+            this.state.todos.forEach((todo) => {
+                if(!todo.id === updateDetails.deletedTodoId)
+                    newState.todos.push(todo);
+            })
+        }
+
+        //Updating the state
+        this.setState(newState);
     }
+
+    showNewTodoDialog = () => displayPopup(<NewTodoDialog createNewTodo={this.addNewTodo.bind(this)}/>);
 }
 
 /*****************************Exports************************* */

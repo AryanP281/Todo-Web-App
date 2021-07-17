@@ -3,10 +3,11 @@
 import { useState } from "react";
 import {Link, useHistory} from "react-router-dom";
 import { getCookies, emailRegex } from "../Services/Services";
+import {apiBaseUrl} from "../Config/Global";
 
 /*****************************Variables************************* */
 const errorMessages = ["User with given email does not exist.", "Incorrect password. ", "Failed to sign in. Try again later. "]; //The different error messages to be shown
-const loginApiUrl = "http://localhost:5000/auth/signin"; //The api endpoint url to be used for signing in the user
+const loginApiUrl = `${apiBaseUrl}auth/signin`; //The api endpoint url to be used for signing in the user
 
 /*****************************Component************************* */
 function SignIn()

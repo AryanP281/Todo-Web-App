@@ -5,17 +5,21 @@ import { displayPopup } from "./Home";
 import TodoList from "./TodoList";
 import SideNavBar from "./SideNavBar";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {apiBaseUrl} from "../Config/Global";
 
 /*****************************Variables*********************/
 let addNewList; //The function exported to add new lists to the dashboard
 let listExists; //A function which returns if a list with the given name has already been created by the user
 let removeList; //A function which removes the provided user todo list
+let insertNewTodo; //A function which inserts a new todo item to a list
+let removeTodo; //Removes a todo item from list
+let editTodoCard; //Edits a todo card
 const listsMap = new Map(); //The lists mapped by their names
 const todoItemChangesBuffer = []; //Buffer for storing the changes to todo items so as to be written out to the database periodically
 let writingChangesToDb = false; //Indicates whether the previous write is still going on
-const fetchDatUrl = "http://localhost:5000/lists/all"; //The api endpoint url for fetching the user todos
-const deleteListUrl = "http://localhost:5000/lists/removelist"; //The api endpoint url for deleting a list
-const todoItemChangesUrl = "http://localhost:5000/lists/movetodos"; //The api endpoints for todo card movement
+const fetchDatUrl = `${apiBaseUrl}lists/all`; //The api endpoint url for fetching the user todos
+const deleteListUrl = `${apiBaseUrl}lists/removelist`; //The api endpoint url for deleting a list
+const todoItemChangesUrl = `${apiBaseUrl}lists/movetodos`; //The api endpoints for todo card movement
 
 /*****************************Component*********************/
 function Dashboard()
@@ -26,23 +30,20 @@ function Dashboard()
     addNewList = (newList) => addList(newList, todos, setTodos);
     listExists = (listName) => listsMap.has(listName);
     removeList = (listName) => deleteList(listName, todos, setTodos);
-
-    //Fetching the user todos
-    useEffect(() => fetchData(setTodos), []);
+    insertNewTodo = (newTodo) => addNewTodo(newTodo, todos);
+    removeTodo = (todoDetails) => removeTodoItem(todoDetails, todos, setTodos);
+    editTodoCard = (editedTodo) => editTodoItem(editedTodo, todos);
 
     //Periodically writing the card position changes to database
     writeCardSwaps();
 
     useEffect(() => {
-        window.addEventListener("beforeunload", (event) => {
-            
-            //Flushing card changes
-            flushItemChangesBuffer();
-            
-            (event || window.event).returnValue = "\o/";
+        //Fetching the user dara
+        fetchData(setTodos);
+        
+        window.addEventListener("beforeunload", windowUnloadCallback);
 
-            return "\o/";
-        });
+        return () => {window.removeEventListener("beforeunload", windowUnloadCallback)}
     },[]);
 
     return (
@@ -102,17 +103,19 @@ function displayTodos(lists, todos, setTodos)
     displayPopup(null);
 }
 
-function addList(newList, oldLists, setTodos)
+function addList(newList, oldTodos, setTodos)
 {
     /*Adds a new list to the dashboard */
 
-    const newLists = [];
-    oldLists.forEach((list) => {
-        newLists.push(list);
+    //Creating the new todos map
+    const newTodos = new Map();
+    oldTodos.forEach((value, key) => {
+        newTodos.set(key, value);
     });
-    newLists.push({list:newList, todos: []});
+    newTodos.set(newList.code, {list:newList, todos: []});
 
-    setTodos(newLists);
+    //Updating the todos list
+    setTodos(newTodos);
 }
 
 function getLists(todos)
@@ -176,6 +179,68 @@ function removeListElement(listName, todos, setTodos)
     setTodos(newTodos);
 }
 
+function addNewTodo(newTodo, todos)
+{
+    /*Adds a new todo item to the given list */
+
+    //Checking if todo has already been added
+    let todoExists = false;
+    const todoList = todos.get(newTodo.listCode).todos;
+    for(let i = 0; i < todoList.length && !todoExists; ++i)
+    {
+        todoExists = (todoList[i].id === newTodo.id);
+    }
+
+    //Adding todo if it hasnt already been added
+    if(!todoExists)
+        todoList.push(newTodo);
+
+}
+
+function removeTodoItem({todoId, listCode}, todos, setTodos)
+{
+    /*Removes the todo item from the appropriate list */
+
+    //Creating the new todos map
+    const newTodos = new Map();
+    todos.forEach((value,key) => {
+        if(key === listCode)
+        {
+            for(let i = 0; i < value.todos.length; ++i)
+            {
+                if(value.todos[i].id === todoId)
+                {
+                    value.todos.splice(i,1);
+                    break;
+                }
+            }
+        }
+
+        newTodos.set(key, value);
+    });
+
+    setTodos(newTodos);
+}
+
+function editTodoItem(editedTodo, todos)
+{
+    /*Edits the given todo card */
+    
+    //Updating the todo card details
+    const todosList = todos.get(editedTodo.listCode).todos;
+    for(let i = 0; i < todosList.length; ++i)
+    {
+        if(todosList[i].id === editedTodo.id)
+        {
+            if(editedTodo.name)
+                todosList[i].name = editedTodo.name;
+            if(editedTodo.dscr)
+                todosList[i].dscr = editedTodo.dscr;
+        }
+    }
+
+}
+
 function onDragEnd(result, todos, setTodos)
 {
     /*Handles the exchange of todo cards between items */
@@ -183,11 +248,10 @@ function onDragEnd(result, todos, setTodos)
     if(!result.destination)
         return;
 
-    console.log(result)
-
     const [sourceList, destinationList] = bufferChange(result); //Adding the change to buffer
 
     //Repositioning the todo card
+    console.log(todos)
     repostionCard(sourceList, destinationList, {src : result.source.index, dest: result.destination.index}, todos, setTodos);
 }
 
@@ -225,10 +289,9 @@ function repostionCard(source, destination, orders, todos, setTodos)
     });
     
     //Removing the card from old postion
-    console.log(orders)
+    console.log(todos.get(source))
     const todoItem = todos.get(source).todos[orders.src];
     todos.get(source).todos.splice(orders.src, 1);
-    console.log(todos.get(source))
 
     //Adding the card at new position
     todos.get(destination).todos.splice(orders.dest, 0, todoItem);
@@ -282,5 +345,17 @@ function flushItemChangesBuffer()
 
 }
 
+function windowUnloadCallback(event)
+{
+    /*Callback for the window beforeunload event */
+
+    //Flushing card changes
+    flushItemChangesBuffer();
+            
+    (event || window.event).returnValue = "\o/";
+
+    return "\o/";
+}
+
 /*****************************Exports*********************/
-export {Dashboard, addNewList, listExists, removeList};
+export {Dashboard, addNewList, listExists, removeList, insertNewTodo, removeTodo, editTodoCard};

@@ -20,7 +20,7 @@ function EditTodoDialog(props)
 
                 {error && <p>{error}</p>}
 
-                <button onClick={() => editTodoDetails(props.todo, props.todoCard, setError)}>Create New Todo Card</button>
+                <button onClick={() => editTodoDetails(props.todo, props.todoCard, setError)}>Edit Todo Card</button>
             </div>
         </Popup>
     );
@@ -32,27 +32,25 @@ function editTodoDetails(todo, todoCard, setError)
 
     //Getting new todo details
     const newDetails = {
-        todoId : todo.todoId,
-        title : document.getElementById("todo-title").value.trim(),
+        id : todo.todoId,
+        name : document.getElementById("todo-title").value.trim(),
         dscr : document.getElementById("todo-dscr").value.trim()
     };
 
-    console.log(newDetails)
-
     //Checking if the title is empty
-    if(newDetails.title.length === 0)
+    if(newDetails.name.length === 0)
     {
         setError("New title cannot be empty");
         return;
     }
 
     //Checking if the details have changed
-    if(newDetails.title === todo.title && newDetails.dscr === todo.dscr)
+    if(newDetails.name === todo.title && newDetails.dscr === todo.dscr)
         displayPopup(null);
     else
     {
-        if(newDetails.title === todo.title)
-            delete newDetails.title;
+        if(newDetails.name === todo.title)
+            delete newDetails.name;
         else if(newDetails.dscr === todo.dscr)
             delete newDetails.dscr;
 

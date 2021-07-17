@@ -1,11 +1,10 @@
 
 /*****************************Imports*********************/
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { useHistory } from "react-router-dom";
 import { getCookies } from "../Services/Services";
 import { Dashboard } from "./Dashboard";
 import LoadingDialog from "./LoadingDialog";
-import NewListDialog from "./NewListDialog";
 
 /*****************************Component*********************/
 let popupSetter;
@@ -20,12 +19,13 @@ function Home()
 
     //Checking if user has logged in
     const cookiesMap = getCookies();
-    if(!cookiesMap.has("auth"))
+    const userSignedIn = cookiesMap.has("auth");
+    if(!userSignedIn)
         history.replace("/signin"); //Redirecting to sign in page
 
     return (
         <div className="home">
-            <Dashboard />
+            {userSignedIn && <Dashboard />}
             {popup && (popup)}
         </div>
     );
